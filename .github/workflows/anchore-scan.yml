@@ -37,5 +37,7 @@ jobs:
           image: "localbuild/testimage:latest"
           fail-build: false
 
+      - name: printing directory content
+        run: ls -R
       - name: grype scan JSON results
         run: for j in `ls ./anchore-reports/*.json`; do echo "---- ${j} ----"; cat ${j}; echo; done
