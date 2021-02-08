@@ -1,0 +1,41 @@
+---
+name: Anchore for vulnerability Scanning
+
+on:
+  push:
+  pull_request:
+    branches: [ $default-branch ]
+  workflow_dispatch: 
+
+jobs:
+  test:
+    name: Achore scan
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        distro:
+          - centos
+        python-version:
+          - 3.8
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Scan current project
+        uses: anchore/scan-action@v2
+        with:
+          path: "."
+
+      - name: Build the container image
+        run: docker build . --file Dockerfile --tag localbuild/testimage:latest
+
+      - name: Scan the container image
+        uses: anchore/scan-action@v2
+        with:
+          image: "localbuild/testimage:latest"
+          fail-build: false
+
+      - name: grype scan JSON results
+        run: for j in `ls ./anchore-reports/*.json`; do echo "---- ${j} ----"; cat ${j}; echo; done
