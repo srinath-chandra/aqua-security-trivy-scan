@@ -40,4 +40,4 @@ jobs:
       - name: printing directory content
         run: ls -R
       - name: grype scan JSON results
-        run: for j in `ls ./anchore-reports/*.json`; do echo "---- ${j} ----"; cat ${j}; echo; done
+        run: for j in vulnerabilities.json; do echo "---- ${j} ----"; cat ${j}; echo; done
