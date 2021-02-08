@@ -24,15 +24,16 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Scan current project
-        uses: anchore/scan-action@v2
+        uses: anchore/scan-action@master
         with:
           path: "."
+          include-app-packages: true
 
       - name: Build the container image
         run: docker build . --file Dockerfile --tag localbuild/testimage:latest
 
       - name: Scan the container image
-        uses: anchore/scan-action@v2
+        uses: anchore/scan-action@master
         id: scan
         with:
           image: "localbuild/testimage:latest"
