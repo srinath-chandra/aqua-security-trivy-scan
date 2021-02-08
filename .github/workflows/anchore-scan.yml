@@ -34,6 +34,7 @@ jobs:
       - name: Scan the container image
         uses: anchore/scan-action@v2
         with:
+          id: scan
           image: "localbuild/testimage:latest"
           acs-report-enable: true
 
