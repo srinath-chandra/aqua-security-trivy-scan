@@ -52,3 +52,12 @@ jobs:
       
       - name: grype scan JSON results
         run: for j in vulnerabilities.json; do echo "---- ${j} ----"; cat ${j}; echo; done
+      
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: "localbuild/testimage:latest"
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
