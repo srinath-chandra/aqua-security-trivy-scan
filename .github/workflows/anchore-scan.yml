@@ -31,7 +31,7 @@ jobs:
         id: scan
         with:
           image-ref: "localbuild/testimage:latest"
-          format: 'template'
+          format: 'template,table'
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results.sarif'
           severity: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
