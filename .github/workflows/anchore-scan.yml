@@ -27,7 +27,7 @@ jobs:
         run: docker build . --file Dockerfile --tag localbuild/testimage:latest
 
       - name: Run Trivy vulnerability scanner
-        uses: 'aquasecurity/trivy-action@v0.0.8'
+        uses: aquasecurity/trivy-action@master
         id: scan
         with:
           image-ref: "localbuild/testimage:latest"
