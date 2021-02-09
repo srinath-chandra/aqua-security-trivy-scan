@@ -28,6 +28,7 @@ jobs:
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
+        id: scan
         with:
           image-ref: "localbuild/testimage:latest"
           format: 'template'
@@ -41,4 +42,4 @@ jobs:
           sarif_file: 'trivy-results.sarif'
 
       - name: Inspect action SARIF report
-        run: cat ${{ trivy-results.sarif }}
+        run: cat trivy-results.sarif
