@@ -23,41 +23,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Scan current project
-        uses: anchore/scan-action@v2
-        with:
-          path: "."
-          include-app-packages: true
-
       - name: Build the container image
         run: docker build . --file Dockerfile --tag localbuild/testimage:latest
 
-      - name: Scan the container image
-        uses: anchore/scan-action@v2
-        id: scan
-        with:
-          image: "localbuild/testimage:latest"
-          acs-report-enable: true
-
-      - name: upload Anchore scan SARIF report
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: ${{ steps.scan.outputs.sarif }}
-      
-      - name: Inspect action SARIF report
-        run: cat ${{ steps.scan.outputs.sarif }}
-      
-      - name: printing directory content
-        run: ls -R
-      
-      - name: grype scan JSON results
-        run: for j in vulnerabilities.json; do echo "---- ${j} ----"; cat ${j}; echo; done
-      
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: "localbuild/testimage:latest"
-          format: 'table'
-          exit-code: '1'
-          ignore-unfixed: true
-          # severity: 'CRITICAL,HIGH'
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+          severity: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: Inspect action SARIF report
+        run: cat ${{ trivy-results.sarif }}
