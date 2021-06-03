@@ -1,5 +1,5 @@
 ---
-name: Anchore for vulnerability Scanning
+name: Trivy for Vulnerability Scanning
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 
 jobs:
   test:
-    name: Achore scan
+    name: Trivy scan
     runs-on: ubuntu-latest
     strategy:
       matrix:
